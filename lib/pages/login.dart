@@ -119,7 +119,8 @@ class _LoginState extends State<Login> {
                             // the form is invalid.
                             if (_formKey.currentState.validate()) {
                               // Process data.
-                              print(_formKey.currentState);
+                              _formKey.currentState.save();
+                              print(_formData);
                             }
                           },
                           child: Text(_toggleButton == 'login' ? '登录' : '注册'),
