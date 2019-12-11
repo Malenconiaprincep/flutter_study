@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+final _formKey = GlobalKey<FormState>();
 
 class Login extends StatefulWidget {
   @override
@@ -8,6 +9,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   String _toggleButton = 'login';
+  var _formData = {};
 
   void _handleButton(v) {
     setState(() {
@@ -58,6 +60,41 @@ class _LoginState extends State<Login> {
         ]));
   }
 
+  Widget _buildLogin() {
+    return Column(
+      children: <Widget>[Text('登录')],
+    );
+  }
+
+  Widget _buildReg() {
+    return Column(
+      children: <Widget>[
+        TextFormField(
+            decoration: const InputDecoration(hintText: '用户名'),
+            onSaved: (v) {
+              _formData['username'] = v;
+            }),
+        TextFormField(
+          obscureText: true,
+          decoration: const InputDecoration(hintText: '密码'),
+          onSaved: (v) {
+            _formData['password'] = v;
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _buildForm() {
+    return Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            _toggleButton == 'login' ? _buildLogin() : _buildReg()
+          ],
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,15 +103,32 @@ class _LoginState extends State<Login> {
           child: Column(
             children: <Widget>[
               Column(
-                children: <Widget>[_buildHeaderBar()],
+                children: <Widget>[_buildHeaderBar(), _buildForm()],
               ),
-              RaisedButton(
-                onPressed: () {
-                  // Navigate back to the first screen by popping the current route
-                  // off the stack.
-                  Navigator.pop(context);
-                },
-              ),
+              Expanded(
+                child: Container(
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                          bottom: 30,
+                          child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: RaisedButton(
+                          onPressed: () {
+                            // Validate will return true if the form is valid, or false if
+                            // the form is invalid.
+                            if (_formKey.currentState.validate()) {
+                              // Process data.
+                              print(_formKey.currentState);
+                            }
+                          },
+                          child: Text(_toggleButton == 'login' ? '登录' : '注册'),
+                        ),
+                      ))
+                    ],
+                  ),
+                ),
+              )
             ],
           )),
     );
