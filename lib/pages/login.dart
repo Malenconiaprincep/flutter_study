@@ -173,16 +173,20 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: <Widget>[
-                      AlertDialog(
-                          title: Text('Rewind and remember'),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text('You will never be satisfied.'),
-                                Text('You\’re like me. I’m never satisfied.'),
-                              ],
-                            ),
-                          ))
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: AlertDialog(
+                            title: Text('Rewind and remember'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget>[
+                                  Text('You will never be satisfied.'),
+                                  Text('You\’re like me. I’m never satisfied.'),
+                                ],
+                              ),
+                            )),
+                      )
                     ],
                   ),
                 )
