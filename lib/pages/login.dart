@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:convert' show json;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 final _formKey = GlobalKey<FormState>();
 
@@ -13,7 +16,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   TabController _tabController; //需要定义一个Controller
   List tabs = ["登录", "注册"];
   List regs = [
-    {"title": "输入昵称", "name": "username",},
+    {
+      "title": "输入昵称",
+      "name": "username",
+    },
     {"title": "输入密码", "name": "password", "obscure": true},
     {"title": "确认密码", "name": "confirmPassword", "obscure": true}
   ];
@@ -26,6 +32,21 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     _formData = {};
     _formKey.currentState.reset();
   }
+
+  Future<bool> handleRegister() async {
+    final response = await http.post('http://localhost:3000/register');
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON.
+      final statusCode = json.decode(response.body)['code'];
+      print(statusCode);
+      return statusCode == 0 ? true : false;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+
+  void handleLogin() {}
 
   @override
   void initState() {
@@ -75,7 +96,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         children: list.map((item) {
       return Container(
         child: TextFormField(
-          obscureText: item["obscure"] == null ? false : true,
+            obscureText: item["obscure"] == null ? false : true,
             decoration: InputDecoration(
                 hintText: item["title"], hintStyle: TextStyle(fontSize: 14.0)),
             onSaved: (v) {
@@ -91,7 +112,6 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildSubmit() {
-    print(_toggleButton);
     return Stack(
       children: <Widget>[
         Positioned.fill(
@@ -105,7 +125,11 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   if (_formKey.currentState.validate()) {
                     // Process data.
                     _formKey.currentState.save();
-                    print(_formData);
+                    if (_toggleButton == 'login') {
+                      handleLogin();
+                    } else {
+                      handleRegister();
+                    }
                   }
                 },
                 child: Text(_toggleButton == 'login' ? '登录' : '注册'),
@@ -144,7 +168,24 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                       )
                     ],
                   ),
-                )))
+                ))),
+                Expanded(
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: <Widget>[
+                      AlertDialog(
+                          title: Text('Rewind and remember'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text('You will never be satisfied.'),
+                                Text('You\’re like me. I’m never satisfied.'),
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
+                )
               ],
             )));
   }
