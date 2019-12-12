@@ -13,15 +13,18 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   TabController _tabController; //需要定义一个Controller
   List tabs = ["登录", "注册"];
   List regs = [
+    {"title": "输入昵称", "name": "username",},
+    {"title": "输入密码", "name": "password", "obscure": true},
+    {"title": "确认密码", "name": "confirmPassword", "obscure": true}
+  ];
+  List logins = [
     {"title": "输入昵称", "name": "username"},
-    {"title": "输入密码", "name": "password"},
-    {"title": "确认密码", "name": "confirmPassword"}
+    {"title": "输入密码", "name": "password", "obscure": true},
   ];
 
-  void _handleButton(v) {
-    setState(() {
-      _toggleButton = v;
-    });
+  void resetFormState() {
+    _formData = {};
+    _formKey.currentState.reset();
   }
 
   @override
@@ -40,6 +43,13 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         labelPadding: new EdgeInsets.all(1.0),
         indicatorColor: Color.fromRGBO(0, 0, 0, 0),
         controller: _tabController,
+        onTap: ((v) {
+          print(v);
+          setState(() {
+            _toggleButton = v == 0 ? 'login' : 'reg';
+          });
+          resetFormState();
+        }),
         tabs: tabs.map((e) => Tab(text: e)).toList());
   }
 
@@ -60,61 +70,28 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         ]));
   }
 
-  Widget _buildLogin() {
+  Widget _buildList(List list) {
     return Column(
-      children: <Widget>[Text('登录')],
-    );
-  }
-
-  Widget _buildReg() {
-    return Column(
-        children: regs.map((reg) {
+        children: list.map((item) {
       return Container(
         child: TextFormField(
+          obscureText: item["obscure"] == null ? false : true,
             decoration: InputDecoration(
-                hintText: reg["title"], hintStyle: TextStyle(fontSize: 14.0)),
+                hintText: item["title"], hintStyle: TextStyle(fontSize: 14.0)),
             onSaved: (v) {
               print(v);
-              _formData[reg["name"]] = v;
+              _formData[item["name"]] = v;
             }),
       );
-    }).toList()
-
-        // children: <Widget>[
-        //   TextFormField(
-        //       decoration: const InputDecoration(hintText: '输入昵称', hintStyle: TextStyle( fontSize: 14.0)),
-        //       onSaved: (v) {
-        //         _formData['username'] = v;
-        //       }),
-        //   TextFormField(
-        //     obscureText: true,
-        //     decoration: const InputDecoration(hintText: '设置密码', hintStyle: TextStyle(fontSize: 14.0)),
-        //     onSaved: (v) {
-        //       _formData['password'] = v;
-        //     },
-        //   ),
-        //   TextFormField(
-        //     obscureText: true,
-        //     decoration: const InputDecoration(hintText: '确认密码', hintStyle: TextStyle(fontSize: 14.0)),
-        //     onSaved: (v) {
-        //       _formData['confirm_password'] = v;
-        //     },
-        //   )
-        // ],
-        );
+    }).toList());
   }
 
-  Widget _buildForm() {
-    return Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            _toggleButton == 'login' ? _buildLogin() : _buildReg()
-          ],
-        ));
+  Widget _buildForm(child) {
+    return Form(key: _formKey, child: child);
   }
 
   Widget _buildSubmit() {
+    print(_toggleButton);
     return Stack(
       children: <Widget>[
         Positioned.fill(
@@ -147,20 +124,27 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               children: <Widget>[
                 _buildHeaderBar(),
                 Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: tabs.map((e) {
-                      //创建3个Tab页
-                      return Container(
-                        alignment: Alignment.center,
-                        child: e == '登录' ? _buildLogin() : _buildReg(),
-                      );
-                    }).toList(),
+                    child: _buildForm(Container(
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: tabs.map((e) {
+                            //创建3个Tab页
+                            return Container(
+                              alignment: Alignment.center,
+                              child: _buildList(e == '登录' ? logins : regs),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildSubmit(),
+                      )
+                    ],
                   ),
-                ),
-                Expanded(
-                  child: _buildSubmit(),
-                )
+                )))
               ],
             )));
   }
