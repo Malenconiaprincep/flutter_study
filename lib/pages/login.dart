@@ -36,7 +36,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   Future<bool> handleRegister() async {
-    final response = await http.post('http://localhost:3000/register');
+    final response = await http.post('http://10.226.33.116:3000/register');
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON.
       final statusCode = json.decode(response.body)['code'];
@@ -49,7 +49,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   }
 
   Future<http.Response> handleLogin() async {
-    var response = await Http.get('http://localhost:3000/login');
+    var response = await Http.get('http://10.226.33.116:3000/login');
     if (response.data["code"] == 1) {
       Navigator.pushReplacementNamed(context, '/home');
     }

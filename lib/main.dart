@@ -23,7 +23,7 @@ void main() {
 
 class LandingPage extends StatelessWidget {
   Future<bool>checkIfAuthenticated() async {
-    final response = await http.get('http://localhost:3000/login');
+    final response = await http.get('http://10.226.33.116:3000/login');
     if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.
     final statusCode = json.decode(response.body)['code'];
@@ -39,9 +39,9 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     checkIfAuthenticated().then((success) {
       // if (success) {
-        Navigator.pushReplacementNamed(context, '/home');
+      //   Navigator.pushReplacementNamed(context, '/home');
       // } else {
-        // Navigator.pushReplacementNamed(context, '/login');
+        Navigator.pushReplacementNamed(context, '/login');
       // }
     });
     return Scaffold(
