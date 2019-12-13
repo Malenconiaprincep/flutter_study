@@ -19,8 +19,7 @@ class Http {
         // 接口成功返回时处理
         onResponse: (Response resp) {
           // 这里为了让数据接口返回慢一点，增加了3秒的延时
-          print(resp);
-          Future.delayed(Duration(seconds: 3), () {
+          return Future.delayed(Duration(seconds: 3), () {
             Loading.complete();
             return resp;
           });

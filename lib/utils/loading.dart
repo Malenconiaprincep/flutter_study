@@ -16,7 +16,8 @@ class Loading {
 
   static void complete() {
     // 完成后关闭loading窗口
-    Navigator.of(ctx, rootNavigator: true).pop();
+    print('>>> complete');
+    // Navigator.of(ctx, rootNavigator: true).pop();
   }
 }
 

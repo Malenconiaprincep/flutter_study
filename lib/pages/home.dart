@@ -10,10 +10,6 @@ class Home extends StatelessWidget {
       body: Center(
         child: RaisedButton(
           child: Text('Launch screen1'),
-          onPressed: () {
-            // Navigate to the second screen using a named route.
-            Navigator.pushNamed(context, '/login');
-          },
         ),
       ),
     );

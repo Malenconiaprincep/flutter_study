@@ -48,50 +48,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     }
   }
 
-  void handleLogin() {
-    Http.get('http://localhost:3000/login');
+  Future<http.Response> handleLogin() async {
+    var response = await Http.get('http://localhost:3000/login');
+    if (response.data["code"] == 1) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
     // _incrementCounter();
-  }
-
-  void _incrementCounter() {
-    showDialog(
-  // 传入 context
-  context: context,
-  // 构建 Dialog 的视图
-  builder: (_) => Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Text('Custom Dialog',
-                        style: TextStyle(
-                            fontSize: 16,
-                            decoration: TextDecoration.none)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 8),
-                    child: FlatButton(
-                        onPressed: () {
-                          // 关闭 Dialog
-                          Navigator.pop(_);
-                        },
-                        child: Text('确定')),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-);
   }
 
   @override
