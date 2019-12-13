@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert' show json;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../utils/loading.dart' show Loading;
+import '../utils/http.dart' show Http;
 
 final _formKey = GlobalKey<FormState>();
 
-class Login extends StatefulWidget {
+class Login extends StatefulWidget { 
   @override
   _LoginState createState() => _LoginState();
 }
@@ -46,7 +48,51 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     }
   }
 
-  void handleLogin() {}
+  void handleLogin() {
+    Http.get('http://localhost:3000/login');
+    // _incrementCounter();
+  }
+
+  void _incrementCounter() {
+    showDialog(
+  // 传入 context
+  context: context,
+  // 构建 Dialog 的视图
+  builder: (_) => Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text('Custom Dialog',
+                        style: TextStyle(
+                            fontSize: 16,
+                            decoration: TextDecoration.none)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 15, bottom: 8),
+                    child: FlatButton(
+                        onPressed: () {
+                          // 关闭 Dialog
+                          Navigator.pop(_);
+                        },
+                        child: Text('确定')),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+);
+  }
 
   @override
   void initState() {
@@ -111,6 +157,31 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     return Form(key: _formKey, child: child);
   }
 
+  Widget _buildBody() {
+    return Expanded(
+        child: _buildForm(Container(
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: tabs.map((e) {
+                //创建3个Tab页
+                return Container(
+                  alignment: Alignment.center,
+                  child: _buildList(e == '登录' ? logins : regs),
+                );
+              }).toList(),
+            ),
+          ),
+          Expanded(
+            child: _buildSubmit(),
+          )
+        ],
+      ),
+    )));
+  }
+
   Widget _buildSubmit() {
     return Stack(
       children: <Widget>[
@@ -139,57 +210,24 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     );
   }
 
+  Widget myGrayBox() {
+    return Container(
+      width: 100,
+      height: 200,
+      color: Colors.yellow,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Loading.ctx = context;
     return Scaffold(
         body: Container(
             margin: new EdgeInsets.symmetric(horizontal: 30.0),
             child: Column(
               children: <Widget>[
                 _buildHeaderBar(),
-                Expanded(
-                    child: _buildForm(Container(
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: tabs.map((e) {
-                            //创建3个Tab页
-                            return Container(
-                              alignment: Alignment.center,
-                              child: _buildList(e == '登录' ? logins : regs),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildSubmit(),
-                      )
-                    ],
-                  ),
-                ))),
-                Expanded(
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: <Widget>[
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        child: AlertDialog(
-                            title: Text('Rewind and remember'),
-                            content: SingleChildScrollView(
-                              child: ListBody(
-                                children: <Widget>[
-                                  Text('You will never be satisfied.'),
-                                  Text('You\’re like me. I’m never satisfied.'),
-                                ],
-                              ),
-                            )),
-                      )
-                    ],
-                  ),
-                )
+                _buildBody(),
               ],
             )));
   }

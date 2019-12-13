@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert' show json;
 import 'package:flutter/material.dart';
+import 'package:flutter_study/utils/loading.dart';
 import './pages/home.dart';
 import './pages/login.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +38,6 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('>>>');
     checkIfAuthenticated().then((success) {
       if (success) {
         Navigator.pushReplacementNamed(context, '/home');
