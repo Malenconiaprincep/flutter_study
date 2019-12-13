@@ -19,10 +19,7 @@ class _HomeState extends State<Home> {
         removeTop: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            UserInfo(),
-            GroupList()
-          ],
+          children: <Widget>[UserInfo(), GroupList()],
         ),
       ),
     );
@@ -41,6 +38,41 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _buildList() => ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      // 如果itemcount 为null 则为无限
+      itemCount: 5,
+      itemBuilder: /*1*/ (context, i) {
+        return _buildRow('makuta1', 'fewew', Icons.people);
+      });
+
+  Widget _buildRow(String title, String subtitle, IconData icon) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 1.0, color: Colors.black12),
+        ),
+      ),
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          SizedBox(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: 10.0),
+                  child: Text(title),
+                )
+              ],
+            ),
+          ),
+          Icon(Icons.more_horiz)
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,18 +80,12 @@ class _HomeState extends State<Home> {
       drawer: _buildDrawer(),
       body: Center(
         child: Container(
+          margin: EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
               _buildAppBar(),
-              Align(
-                child: RaisedButton(
-                  child: Text('Launch screen2'),
-                  onPressed: () {
-                    // Validate will return true if the form is valid, or false if
-                    // the form is invalid.
-                    print('vv');
-                  },
-                ),
+              Expanded(
+                child: _buildList(),
               )
             ],
           ),
