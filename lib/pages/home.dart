@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  @override
   Widget _buildDrawer() {
     return Drawer(
       child: ListView(
@@ -38,14 +46,19 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Home'),
+          title: Text('Home'),
+          // 自定义Drawer图标
+          // leading: new IconButton(
+          //     icon: new Icon(Icons.apps),
+          //     onPressed: () => _scaffoldKey.currentState.openDrawer())),
       ),
       drawer: _buildDrawer(),
       body: Align(
         alignment: Alignment.bottomRight,
         child: RaisedButton(
-          child: Text('Launch screen1'),
+          child: Text('Launch screen2'),
           onPressed: () {
             // Validate will return true if the form is valid, or false if
             // the form is invalid.
