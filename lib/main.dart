@@ -38,11 +38,11 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     checkIfAuthenticated().then((success) {
-      if (success) {
+      // if (success) {
         Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        Navigator.pushReplacementNamed(context, '/login');
-      }
+      // } else {
+        // Navigator.pushReplacementNamed(context, '/login');
+      // }
     });
     return Scaffold(
       body: Center(child: Text('Loading'),)
