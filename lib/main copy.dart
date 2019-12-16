@@ -41,7 +41,7 @@ class LandingPage extends StatelessWidget {
       // if (success) {
       //   Navigator.pushReplacementNamed(context, '/home');
       // } else {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/login');
       // }
     });
     return Scaffold(

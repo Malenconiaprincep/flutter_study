@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_study/components/grouplist.dart';
 import 'package:flutter_study/components/userInfo.dart';
@@ -9,8 +11,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  List list = List.generate(Random().nextInt(20) + 10, (i) => 'More Item$i');
 
-  @override
+  void _onReorder(int oldIndex, int newIndex) {
+    print('oldIndex: $oldIndex , newIndex: $newIndex');
+    setState(() {
+      if (newIndex == list.length) {
+        newIndex = list.length - 1;
+      }
+      var item = list.removeAt(oldIndex);
+      list.insert(newIndex, item);
+    });
+  }
+
   Widget _buildDrawer() {
     return Drawer(
       child: MediaQuery.removePadding(
@@ -38,13 +51,20 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildList() => ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      // 如果itemcount 为null 则为无限
-      itemCount: 5,
-      itemBuilder: /*1*/ (context, i) {
-        return _buildRow('makuta1', 'fewew', Icons.people);
-      });
+  Widget _buildList() {
+    return ReorderableListView(
+          children: list
+              .map((m) => Container(
+                    key: ObjectKey(m),
+                    child: Container(
+                      height: 50,
+                      child: _buildRow(m, m, Icons.people)
+                    ),
+                  ))
+              .toList(), //不要忘记 .toList()
+          onReorder: _onReorder,
+        );
+  }
 
   Widget _buildRow(String title, String subtitle, IconData icon) {
     return Container(
@@ -85,7 +105,7 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               _buildAppBar(),
               Expanded(
-                child: _buildList(),
+                child: _buildList()
               )
             ],
           ),
