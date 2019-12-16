@@ -297,7 +297,7 @@ class DraggableGridViewDemo extends StatelessWidget {
     return SortableGridView(
       channelItems,
       childAspectRatio: 3.0, //宽高3比1
-      crossAxisCount: 3, //3列
+      crossAxisCount: 1, //3列
       scrollDirection: Axis.vertical, //竖向滑动
       canAccept: (oldIndex, newIndex) {
         return true;
